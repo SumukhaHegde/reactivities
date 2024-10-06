@@ -1,12 +1,11 @@
 import { Button, Container, Menu } from "semantic-ui-react";
 import Applogo from "../../../../../public/assests/Applogo.png";
 import "./headerStyles.css";
+import { useDispatch } from "react-redux";
+import { openNewForm } from "../../../../Store/ActivityStore";
 
-type props = {
-  openCreateActivityForm: () => void;
-};
-
-const Header = ({ openCreateActivityForm }: props) => {
+const Header = () => {
+  const dispatch = useDispatch();
   return (
     <Menu className="h176" inverted fixed="top">
       <Container>
@@ -19,7 +18,9 @@ const Header = ({ openCreateActivityForm }: props) => {
           <Button
             positive
             content="Create Activity"
-            onClick={() => openCreateActivityForm()}
+            onClick={() => {
+              dispatch(openNewForm(true));
+            }}
           />
         </Menu.Item>
       </Container>

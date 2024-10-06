@@ -7,47 +7,49 @@ import {
   CardMeta,
   Image,
 } from "semantic-ui-react";
+import { useDispatch } from "react-redux";
 import Activity from "../types";
+import { openNewForm, viewActivity } from "../../../Store/ActivityStore";
 
 type props = {
   activity: Activity;
-  handleEditForm: (id: number) => void;
-  handleCancelViewActivity: () => void;
 };
-const ActivityDetail = ({
-  activity,
-  handleEditForm,
-  handleCancelViewActivity,
-}: props) => {
+const ActivityDetail = ({ activity }: props) => {
+  const dispatch = useDispatch();
+
   return (
-    <Card fluid>
-      <Image src={"../../../../public/assests/weddingImage.jpg"} />
-      <CardContent>
-        <CardHeader>{activity.name}</CardHeader>
-        <CardMeta>
-          <span>{activity.date}</span>
-        </CardMeta>
-        <CardDescription>{activity.description}</CardDescription>
-      </CardContent>
-      <CardContent extra>
-        <Button.Group widths={2}>
-          <Button
-            basic
-            color="blue"
-            content="Edit"
-            onClick={() => {
-              handleEditForm(activity.id);
-            }}
-          />
-          <Button
-            basic
-            color="grey"
-            content="Cancel"
-            onClick={handleCancelViewActivity}
-          />
-        </Button.Group>
-      </CardContent>
-    </Card>
+    activity && (
+      <Card fluid>
+        <Image src={"../../../../public/assests/weddingImage.jpg"} />
+        <CardContent>
+          <CardHeader>{activity.name}</CardHeader>
+          <CardMeta>
+            <span>{activity.date}</span>
+          </CardMeta>
+          <CardDescription>{activity.description}</CardDescription>
+        </CardContent>
+        <CardContent extra>
+          <Button.Group widths={2}>
+            <Button
+              basic
+              color="blue"
+              content="Edit"
+              onClick={() => {
+                dispatch(openNewForm(true));
+              }}
+            />
+            <Button
+              basic
+              color="grey"
+              content="Cancel"
+              onClick={() => {
+                dispatch(viewActivity(null));
+              }}
+            />
+          </Button.Group>
+        </CardContent>
+      </Card>
+    )
   );
 };
 

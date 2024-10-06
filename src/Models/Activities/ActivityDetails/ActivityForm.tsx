@@ -1,17 +1,14 @@
 import { Button, Form, Segment } from "semantic-ui-react";
-import Activity from "../types";
 import { ChangeEvent, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { openNewForm } from "../../../Store/ActivityStore";
+import httpMethod from "../../../Common/Utils/axiosSetup";
 
-type props = {
-  cancelForm: () => void;
-  activity: Activity | undefined;
-  handleCreateEditActivity: (activity: Activity) => void;
-};
-const ActivityForm = ({
-  cancelForm,
-  activity: selectedActivity,
-  handleCreateEditActivity,
-}: props) => {
+const ActivityForm = () => {
+  const dispatch = useDispatch();
+  const selectedActivity = useSelector(
+    (store) => store.ActivityStore.selectedActivity
+  );
   const initialActivity = selectedActivity ?? {
     id: 0,
     name: "",
@@ -28,16 +25,33 @@ const ActivityForm = ({
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = event.target;
+    // if (name === "date") {
+    //   const date = new Date(value); // specific date and time
+    //   const IsoDateValue = date.toISOString();
+    //   setActivity({ ...activity, [name]: IsoDateValue });
+    // } else {
     setActivity({ ...activity, [name]: value });
   };
 
-  const handleSubmit = () => {
-    handleCreateEditActivity(activity);
+  const handleActivityFormSubmission = () => {
+    if (activity.id > 0) {
+      const body = {
+        activityId: activity.id,
+        activityName: activity.name,
+      };
+      httpMethod.put("/Activity/UpdateActivityName", body).then((res) => {
+        console.log(res);
+      });
+    } else {
+      httpMethod.post("/Activity/CreateActivity", activity).then((res) => {
+        console.log(res);
+      });
+    }
   };
 
   return (
     <Segment clearing>
-      <Form onSubmit={handleSubmit}>
+      <Form onSubmit={handleActivityFormSubmission}>
         <Form.Input
           placeholder="Name"
           value={activity.name}
@@ -51,6 +65,7 @@ const ActivityForm = ({
           onChange={handleInputChange}
         />
         <Form.Input
+          type="date"
           placeholder="Date"
           value={activity.date}
           name="date"
@@ -79,7 +94,7 @@ const ActivityForm = ({
           floated="right"
           color="grey"
           content="Cancel"
-          onClick={cancelForm}
+          onClick={() => dispatch(openNewForm(false))}
         />
       </Form>
     </Segment>

@@ -3,55 +3,24 @@ import Activity from "./types";
 import ActivityList from "./ActivityList";
 import ActivityDetail from "./ActivityDetails/ActivityDetail";
 import ActivityForm from "./ActivityDetails/ActivityForm";
+import { useSelector } from "react-redux";
 
-type props = {
-  activities: Activity[];
-  viewActivity: Activity | undefined;
-  handleViewActivity: (id: number) => void;
-  handleCancelOpenForm: () => void;
-  handleEditForm: (id: number) => void;
-  openCreateActivityForm: boolean;
-  handleCreateEditActivity: (activity: Activity) => void;
-  handleCancelViewActivity: () => void;
-  deleteActivity: (id: number) => void;
-};
+const ActivityDashboard = () => {
+  const { openActivityForm, selectedActivity } = useSelector(
+    (store) => store.ActivityStore
+  );
 
-const ActivityDashboard = ({
-  activities,
-  viewActivity,
-  handleViewActivity,
-  handleCancelOpenForm,
-  handleEditForm,
-  openCreateActivityForm,
-  handleCancelViewActivity,
-  handleCreateEditActivity,
-  deleteActivity,
-}: props) => {
   return (
     <Grid>
       <Grid.Column width="10">
-        <ActivityList
-          activities={activities}
-          viewActivity={handleViewActivity}
-          deleteActivity={deleteActivity}
-        />
+        <ActivityList />
       </Grid.Column>
       <Grid.Column width={6}>
-        {viewActivity && !openCreateActivityForm && (
-          <ActivityDetail
-            activity={viewActivity}
-            handleEditForm={handleEditForm}
-            handleCancelViewActivity={handleCancelViewActivity}
-          />
+        {selectedActivity && !openActivityForm && (
+          <ActivityDetail activity={selectedActivity} />
         )}
 
-        {openCreateActivityForm && (
-          <ActivityForm
-            cancelForm={handleCancelOpenForm}
-            activity={viewActivity}
-            handleCreateEditActivity={handleCreateEditActivity}
-          />
-        )}
+        {openActivityForm && <ActivityForm />}
       </Grid.Column>
     </Grid>
   );

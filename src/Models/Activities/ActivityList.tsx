@@ -1,18 +1,29 @@
 import { Button, Item, Label, Segment } from "semantic-ui-react";
 import Activity from "./types";
+import { useDispatch, useSelector } from "react-redux";
+import { viewActivity } from "../../Store/ActivityStore";
+import httpMethod from "../../Common/Utils/axiosSetup";
 
-type props = {
-  activities: Activity[];
-  viewActivity: (id: number) => void;
-  deleteActivity:(id:number)=>void;
-};
+const ActivityList = () => {
+  const dispatch = useDispatch();
+  const activities: Activity[] = useSelector(
+    (store) => store.ActivityStore.activities
+  );
 
-const ActivityList = ({ activities, viewActivity,deleteActivity }: props) => {
+  const handleDeleteActivity = (id: number) => {
+    httpMethod
+      .delete("/Activity/DeleteActivityById", { params: { id: id } })
+      .then((res) => {
+        console.log(res);
+      });
+      
+  };
+
   return (
     <Segment>
       <Item.Group divided>
         {activities.map((activity) => (
-          <Item>
+          <Item key={activity.id}>
             <Item.Content>
               <Item.Header>{activity.name}</Item.Header>
               <Item.Meta>{activity.date}</Item.Meta>
@@ -27,13 +38,13 @@ const ActivityList = ({ activities, viewActivity,deleteActivity }: props) => {
                   floated="right"
                   content="View"
                   color="blue"
-                  onClick={() => viewActivity(activity.id)}
+                  onClick={() => dispatch(viewActivity(activity))}
                 />
                 <Button
                   floated="right"
                   content="Delete"
                   color="red"
-                  onClick={() => deleteActivity(activity.id)}
+                  onClick={() => handleDeleteActivity(activity.id)}
                 />
                 <Label basic content={activity.category} />
               </Item.Extra>
