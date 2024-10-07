@@ -1,15 +1,16 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import "./App.css";
-import Activity from "./Models/Activities/types";
 import Header from "./Common/Layout/NavBar/Header/Header";
 import { Container } from "semantic-ui-react";
-import ActivityDashboard from "./Models/Activities/ActivityDashboard";
 import httpMethod from "./Common/Utils/axiosSetup";
 import { useDispatch } from "react-redux";
 import { addActivity } from "./Store/ActivityStore";
+import { Outlet, useLocation } from "react-router-dom";
+import HomePage from "./Models/HomePage/HomePage";
 
 function App() {
   const dispatch = useDispatch();
+  const location = useLocation();
 
   useEffect(() => {
     httpMethod.get("/Activity/GetActivities", {}).then((res) => {
@@ -21,10 +22,16 @@ function App() {
 
   return (
     <>
-      <Header />
-      <Container style={{ marginTop: "7em" }}>
-        <ActivityDashboard />
-      </Container>
+      {location.pathname === "/" ? (
+        <HomePage />
+      ) : (
+        <>
+          <Header />
+          <Container style={{ marginTop: "7em" }}>
+            <Outlet />
+          </Container>
+        </>
+      )}
     </>
   );
 }

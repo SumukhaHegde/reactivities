@@ -1,9 +1,9 @@
 import { Grid } from "semantic-ui-react";
-import Activity from "./types";
 import ActivityList from "./ActivityList";
 import ActivityDetail from "./ActivityDetails/ActivityDetail";
 import ActivityForm from "./ActivityDetails/ActivityForm";
 import { useSelector } from "react-redux";
+import ActivityFilter from "./ActivityDetails/ActivityFilter";
 
 const ActivityDashboard = () => {
   const { openActivityForm, selectedActivity } = useSelector(
@@ -16,11 +16,7 @@ const ActivityDashboard = () => {
         <ActivityList />
       </Grid.Column>
       <Grid.Column width={6}>
-        {selectedActivity && !openActivityForm && (
-          <ActivityDetail activity={selectedActivity} />
-        )}
-
-        {openActivityForm && <ActivityForm />}
+        <ActivityFilter />
       </Grid.Column>
     </Grid>
   );

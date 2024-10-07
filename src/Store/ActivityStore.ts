@@ -10,6 +10,7 @@ const ActivityStore = createSlice({
   },
   reducers: {
     addActivity: (state, action) => {
+      action.payload.date = action.payload.date.split("T")[0];
       state.activities.push(action.payload);
     },
     viewActivity: (state, action) => {

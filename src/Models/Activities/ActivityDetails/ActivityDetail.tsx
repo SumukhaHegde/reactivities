@@ -5,50 +5,45 @@ import {
   CardDescription,
   CardHeader,
   CardMeta,
+  Grid,
   Image,
 } from "semantic-ui-react";
 import { useDispatch } from "react-redux";
 import Activity from "../types";
-import { openNewForm, viewActivity } from "../../../Store/ActivityStore";
+import { viewActivity } from "../../../Store/ActivityStore";
+import { useNavigate, useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import httpMethod from "../../../Common/Utils/axiosSetup";
+import ActivityDetailHeader from "./ActivityDetailHeader";
+import ActivityDetailInfo from "./ActivityDetailInfo";
+import ActivityDetailChat from "./ActivityDetailChat";
+import ActivityDetailSideBar from "./ActivityDetailSideBar";
 
-type props = {
-  activity: Activity;
-};
-const ActivityDetail = ({ activity }: props) => {
+const ActivityDetail = () => {
+  const [activity, setActivity] = useState<Activity | undefined>(undefined);
   const dispatch = useDispatch();
+  const urlParams = useParams();
+  const navigate = useNavigate();
 
+  useEffect(() => {
+    httpMethod
+      .get("/Activity/GetActivityByID", { params: { Id: urlParams.id } })
+      .then((res) => {
+        setActivity(res);
+      });
+  }, [activity]);
   return (
     activity && (
-      <Card fluid>
-        <Image src={"../../../../public/assests/weddingImage.jpg"} />
-        <CardContent>
-          <CardHeader>{activity.name}</CardHeader>
-          <CardMeta>
-            <span>{activity.date}</span>
-          </CardMeta>
-          <CardDescription>{activity.description}</CardDescription>
-        </CardContent>
-        <CardContent extra>
-          <Button.Group widths={2}>
-            <Button
-              basic
-              color="blue"
-              content="Edit"
-              onClick={() => {
-                dispatch(openNewForm(true));
-              }}
-            />
-            <Button
-              basic
-              color="grey"
-              content="Cancel"
-              onClick={() => {
-                dispatch(viewActivity(null));
-              }}
-            />
-          </Button.Group>
-        </CardContent>
-      </Card>
+      <Grid>
+        <Grid.Column width={10}>
+          <ActivityDetailHeader activity={activity} />
+          <ActivityDetailInfo activity={activity} />
+          <ActivityDetailChat />
+        </Grid.Column>
+        <Grid.Column width={6}>
+          <ActivityDetailSideBar />
+        </Grid.Column>
+      </Grid>
     )
   );
 };

@@ -3,9 +3,10 @@ import { ChangeEvent, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { openNewForm } from "../../../Store/ActivityStore";
 import httpMethod from "../../../Common/Utils/axiosSetup";
+import { useNavigate } from "react-router-dom";
 
 const ActivityForm = () => {
-  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const selectedActivity = useSelector(
     (store) => store.ActivityStore.selectedActivity
   );
@@ -42,10 +43,12 @@ const ActivityForm = () => {
       httpMethod.put("/Activity/UpdateActivityName", body).then((res) => {
         console.log(res);
       });
+      navigate(`/viewActivity/${activity.id}`);
     } else {
       httpMethod.post("/Activity/CreateActivity", activity).then((res) => {
         console.log(res);
       });
+      navigate("/activities");
     }
   };
 
@@ -94,7 +97,7 @@ const ActivityForm = () => {
           floated="right"
           color="grey"
           content="Cancel"
-          onClick={() => dispatch(openNewForm(false))}
+          onClick={() => navigate("/activities")}
         />
       </Form>
     </Segment>

@@ -1,58 +1,45 @@
-import { Button, Item, Label, Segment } from "semantic-ui-react";
+import { Header, Item, Segment } from "semantic-ui-react";
 import Activity from "./types";
-import { useDispatch, useSelector } from "react-redux";
-import { viewActivity } from "../../Store/ActivityStore";
-import httpMethod from "../../Common/Utils/axiosSetup";
+import { useSelector } from "react-redux";
+import ActivityCard from "./ActivityCard";
+import { Fragment } from "react/jsx-runtime";
 
 const ActivityList = () => {
-  const dispatch = useDispatch();
   const activities: Activity[] = useSelector(
     (store) => store.ActivityStore.activities
   );
 
-  const handleDeleteActivity = (id: number) => {
-    httpMethod
-      .delete("/Activity/DeleteActivityById", { params: { id: id } })
-      .then((res) => {
-        console.log(res);
-      });
-      
+  const getGroupedActivitesByDate = () => {
+    const sortedActivities = Array.from(activities).sort((a, b) => {
+      return Date.parse(a.date) - Date.parse(b.date);
+    });
+    return Object.entries(
+      sortedActivities.reduce((activities, activity) => {
+        const date = activity.date;
+        activities[date] = activities[date]
+          ? [...activities[date], activity]
+          : [activity];
+        return activities;
+      }, {} as { [key: string]: Activity[] })
+    );
   };
+  const groupedActivites = getGroupedActivitesByDate();
 
   return (
-    <Segment>
-      <Item.Group divided>
-        {activities.map((activity) => (
-          <Item key={activity.id}>
-            <Item.Content>
-              <Item.Header>{activity.name}</Item.Header>
-              <Item.Meta>{activity.date}</Item.Meta>
-              <Item.Description>
-                <div>{activity.description}</div>
-                <div>
-                  {activity.venue}, {activity.city}
-                </div>
-              </Item.Description>
-              <Item.Extra>
-                <Button
-                  floated="right"
-                  content="View"
-                  color="blue"
-                  onClick={() => dispatch(viewActivity(activity))}
-                />
-                <Button
-                  floated="right"
-                  content="Delete"
-                  color="red"
-                  onClick={() => handleDeleteActivity(activity.id)}
-                />
-                <Label basic content={activity.category} />
-              </Item.Extra>
-            </Item.Content>
-          </Item>
-        ))}
-      </Item.Group>
-    </Segment>
+    <>
+      {groupedActivites.map(([groupName, activities]) => {
+        return (
+          <Fragment key={groupName}>
+            <Header sub color="teal">
+              {groupName}
+            </Header> 
+            {activities.map((activity) => (
+              <ActivityCard activity={activity} key={activity.id} />
+            ))}
+          </Fragment>
+        );
+      })}
+    </>
   );
 };
 
