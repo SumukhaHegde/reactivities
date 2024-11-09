@@ -23,7 +23,6 @@ const ActivityDetail = () => {
   const [activity, setActivity] = useState<Activity | undefined>(undefined);
   const dispatch = useDispatch();
   const urlParams = useParams();
-  const navigate = useNavigate();
 
   useEffect(() => {
     httpMethod
@@ -41,7 +40,7 @@ const ActivityDetail = () => {
           <ActivityDetailChat />
         </Grid.Column>
         <Grid.Column width={6}>
-          <ActivityDetailSideBar />
+          <ActivityDetailSideBar attendees={activity.attendees!} />
         </Grid.Column>
       </Grid>
     )

@@ -1,7 +1,11 @@
 import { Link } from "react-router-dom";
 import { Segment, List, Item, Label, Image } from "semantic-ui-react";
+import { Profile } from "../../Profiles/Profiles";
 
-const ActivityDetailSideBar = () => {
+interface Props {
+  attendees: Profile[];
+}
+const ActivityDetailSideBar = ({ attendees }: Props) => {
   return (
     <>
       <Segment
@@ -16,41 +20,27 @@ const ActivityDetailSideBar = () => {
       </Segment>
       <Segment attached>
         <List relaxed divided>
-          <Item style={{ position: "relative" }}>
-            <Label
-              style={{ position: "absolute" }}
-              color="orange"
-              ribbon="right"
-            >
-              Host
-            </Label>
-            <Image size="tiny" src={"../../../../public/assests/user.avif"} />
-            <Item.Content verticalAlign="middle">
-              <Item.Header as="h3">
-                <Link to={`#`}>Bob</Link>
-              </Item.Header>
-              <Item.Extra style={{ color: "orange" }}>Following</Item.Extra>
-            </Item.Content>
-          </Item>
-
-          <Item style={{ position: "relative" }}>
-            <Image size="tiny" src={"../../../../public/assests/user.avif"} />
-            <Item.Content verticalAlign="middle">
-              <Item.Header as="h3">
-                <Link to={`#`}>Tom</Link>
-              </Item.Header>
-              <Item.Extra style={{ color: "orange" }}>Following</Item.Extra>
-            </Item.Content>
-          </Item>
-
-          <Item style={{ position: "relative" }}>
-            <Image size="tiny" src={"../../../../public/assests/user.avif"} />
-            <Item.Content verticalAlign="middle">
-              <Item.Header as="h3">
-                <Link to={`#`}>Sally</Link>
-              </Item.Header>
-            </Item.Content>
-          </Item>
+          {attendees.map((attendee) => (
+            <Item style={{ position: "relative" }}>
+              <Label
+                style={{ position: "absolute" }}
+                color="orange"
+                ribbon="right"
+              >
+                Host
+              </Label>
+              <Image
+                size="tiny"
+                src={attendee.image || "../../../../public/assests/user.avif"}
+              />
+              <Item.Content verticalAlign="middle">
+                <Item.Header as="h3">
+                  <Link to={`/profiles/${attendee.username}`}>Bob</Link>
+                </Item.Header>
+                <Item.Extra style={{ color: "orange" }}>Following</Item.Extra>
+              </Item.Content>
+            </Item>
+          ))}
         </List>
       </Segment>
     </>

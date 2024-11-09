@@ -9,6 +9,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import ActivityForm from "./Models/Activities/ActivityDetails/ActivityForm.tsx";
 import ActivityDashboard from "./Models/Activities/ActivityDashboard.tsx";
 import ActivityDetail from "./Models/Activities/ActivityDetails/ActivityDetail.tsx";
+import Login from "./Models/Login/Login.tsx";
 
 const route = createBrowserRouter([
   {
@@ -26,6 +27,10 @@ const route = createBrowserRouter([
       {
         path: "/viewActivity/:id",
         element: <ActivityDetail />,
+      },
+      {
+        path: "/login",
+        element: <Login />,
       },
     ],
   },

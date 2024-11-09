@@ -4,9 +4,10 @@ import Activity from "../Models/Activities/types";
 const ActivityStore = createSlice({
   name: "activity",
   initialState: {
-    activities: [],
+    activities: [] as Activity[],
     selectedActivity: null,
     openActivityForm: false,
+    isLoading: false,
   },
   reducers: {
     addActivity: (state, action) => {
@@ -19,8 +20,12 @@ const ActivityStore = createSlice({
     openNewForm: (state, action) => {
       state.openActivityForm = action.payload;
     },
+    setLoadingScreen: (state, action) => {
+      state.isLoading = action.payload;
+    },
   },
 });
 
-export const { addActivity, viewActivity, openNewForm } = ActivityStore.actions;
+export const { addActivity, viewActivity, openNewForm, setLoadingScreen } =
+  ActivityStore.actions;
 export default ActivityStore;
